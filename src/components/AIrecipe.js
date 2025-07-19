@@ -1,9 +1,22 @@
-import ReactMarkdown from 'react-markdown'
+import ReactMarkdown from 'react-markdown';
 
-export default function AIrecipe(props) {
-    return (<section className="suggested-recipe-container" aria-live="polite">
-        <h2>Chef AI Recommends:</h2>
-        <ReactMarkdown>{props.recipe}</ReactMarkdown>
-
-    </section>)
-} 
+export default function AIrecipe({ recipe }) {
+  if (!recipe) return null;
+  
+  return (
+    <article className="recipe" aria-labelledby="recipe-title">
+      <header className="recipe-header">
+        <h2 id="recipe-title" className="recipe-title">
+          <span className="emoji" role="img" aria-hidden="true">✨</span>
+          Chef's Recommendation
+        </h2>
+      </header>
+      
+      <div className="recipe-content">
+        <ReactMarkdown className="recipe-markdown">
+          {recipe}
+        </ReactMarkdown>
+      </div>
+    </article>
+  );
+}
