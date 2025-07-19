@@ -1,23 +1,36 @@
-import logo from './logo.svg';
 import './App.css';
+import AIrecipe from './components/AIrecipe';
+import Header from './components/Header';
+import IngredientsList from './components/IngredientsList';
+import Main from './components/Main';
+import { useState } from 'react';
+import { getRecipeFromGemini } from './ai';
 
 function App() {
+  const [ingredients, setIngredients] = useState([])
+  const [recipe, setRecipe] = useState("")
+  const ingredientsListItems = ingredients.map(ingredient => <li key={ingredient}>{ingredient}</li>)
+  function handleSubmit(formData) {
+    const newIngredient = formData.get("ingredient")
+    setIngredients(prev => [...prev, newIngredient])
+  }
+  //get recipe from AI
+  async function getRecipe() {
+    try {
+      const generatedRecipe = await getRecipeFromGemini(ingredients);
+      setRecipe(generatedRecipe);
+    } catch (error) {
+      alert(error.message);
+      console.error('Recipe generation failed:', error);
+    }
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header />
+      <Main handleSubmit={handleSubmit} />
+      {ingredients.length > 0 && < IngredientsList condition={ingredients.length} ingredientsListItems={ingredientsListItems} getRecipe={getRecipe} />}
+      {recipe && <AIrecipe recipe={recipe} />}
     </div>
   );
 }
