@@ -1,8 +1,8 @@
 import ReactMarkdown from 'react-markdown';
 
-export default function AIrecipe({ recipe }) {
+export default function AIrecipe({ recipe, ref }) {
   if (!recipe) return null;
-  
+
   return (
     <article className="recipe" aria-labelledby="recipe-title">
       <header className="recipe-header">
@@ -11,8 +11,8 @@ export default function AIrecipe({ recipe }) {
           Chef's Recommendation
         </h2>
       </header>
-      
-      <div className="recipe-content">
+
+      <div ref={ref} className="recipe-content">
         <ReactMarkdown className="recipe-markdown">
           {recipe}
         </ReactMarkdown>

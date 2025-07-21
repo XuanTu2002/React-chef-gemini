@@ -3,7 +3,7 @@ import AIrecipe from './components/AIrecipe';
 import Header from './components/Header';
 import IngredientsList from './components/IngredientsList';
 import Main from './components/Main';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { getRecipeFromGemini } from './ai';
 
 function App() {
@@ -14,6 +14,14 @@ function App() {
     const newIngredient = formData.get("ingredient")
     setIngredients(prev => [...prev, newIngredient])
   }
+  //make the recipe section automatically scroll into view
+  const sectionScrollIntoView = useRef("null")
+  useEffect(() => {
+    if (recipe !== "" && sectionScrollIntoView.current !== null) {
+      sectionScrollIntoView.current.scrollIntoView({ behavior: "smooth" })
+    }
+  }, [recipe])
+
   //get recipe from AI
   async function getRecipe() {
     try {
@@ -29,7 +37,7 @@ function App() {
     <div className="App">
       <Header />
       <Main handleSubmit={handleSubmit} />
-      {ingredients.length > 0 && < IngredientsList condition={ingredients.length} ingredientsListItems={ingredientsListItems} getRecipe={getRecipe} />}
+      {ingredients.length > 0 && < IngredientsList ref={sectionScrollIntoView} condition={ingredients.length} ingredientsListItems={ingredientsListItems} getRecipe={getRecipe} />}
       {recipe && <AIrecipe recipe={recipe} />}
     </div>
   );
